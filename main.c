@@ -15,7 +15,7 @@ char caesarCipher(char* plainText, int key);
 int main()  {
 
 char plainText[101];
-
+char cipherResult;
 
 scanf("%s", plainText[] )
 // newCustom run will read text from the plainText file which essentially performs a scanf
@@ -28,13 +28,13 @@ return 0;
 }
 
 //  CIPHER FUNCTION DEFINITION
-char caesarCipher(char* plainText, int key);    {
+char caesarCipher(char* plainText, int key)    {
 
 int key = 1;
 char cipherResult;
 
 
-for (index = 0; i <= strlen(plainText) ; index ++)   {
+for (int index = 0; i <= strlen(plainText) ; index ++)   {
     
     cipherResult = (plainText[i] + key) % 26;    // will return ciphered letter as a number
     
