@@ -9,16 +9,18 @@ Description:
 
 
 //  CIPHER FUNCTION PROTOTYPE
-char caesarCipher(char* plainText, int key);
+char caesarCipher(char* plainText, int shift);
 
 
 int main()  {
 
-char plainText[101];
-char cipherResult;
+char plainText[101] = "HELLO";
+char cipherResult = 0;
 
-scanf("%s", plainText[] )
+//scanf("%s", plainText[1] );
 // newCustom run will read text from the plainText file which essentially performs a scanf
+
+cipherResult = caesarCipher(plainText[101]);
 
 printf("The cipher result text is: \n");
 printf("%c\n", cipherResult);
@@ -28,15 +30,15 @@ return 0;
 }
 
 //  CIPHER FUNCTION DEFINITION
-char caesarCipher(char* plainText, int key)    {
+char caesarCipher(char * plainText, int key)    {
 
-int key = 1;
+int shift = 1;
 char cipherResult;
 
 
-for (int index = 0; i <= strlen(plainText) ; index ++)   {
+for (int index = 0; index <= strlen(plainText) ; index ++)   {
     
-    cipherResult = (plainText[i] + key) % 26;    // will return ciphered letter as a number
+    cipherResult = (plainText[index] + shift) % 26;    // will return ciphered letter as a number
     
     return cipherResult;
     
