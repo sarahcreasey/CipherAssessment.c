@@ -4,43 +4,51 @@ Author: Sarah Creasey
 Description:
 */
 
-//int shift (char text[]);
-
 #include <stdio.h>
+#include <string.h>     // functions within library can be used to find the length of a string
+
+
+//  CIPHER FUNCTION PROTOTYPE
+char caesarCipher(char* plainText, int key);
+
 
 int main()  {
-    
-char x = 97;
-x = x - 65;
 
-printf("%d \n", x);
+char plainText[101];
+
+
+scanf("%s", plainText[] )
+// newCustom run will read text from the plainText file which essentially performs a scanf
+
+printf("The cipher result text is: \n");
+printf("%c\n", cipherResult);
+
 
 return 0;
-
-
-
-
-
- char text[] = "HELP" ;
- char newLetter = 0;
- // char text[] = "HELP" ;
-
-    printf("letter is now %d\n", newLetter); 
-
-    return 0;
-
 }
 
-int shift (char text[])     {
-    char text[] = "HELP" ;
-    char newLetter;      // result of rotation
-    int x = text;
-    int k = 5;     // degree of rotation
+//  CIPHER FUNCTION DEFINITION
+char caesarCipher(char* plainText, int key);    {
 
-    newLetter = x + k;
+int key = 1;
+char cipherResult;
+
+
+for (index = 0; i <= strlen(plainText) ; index ++)   {
     
-    return newLetter;
+    cipherResult = (plainText[i] + key) % 26;    // will return ciphered letter as a number
+    
+    return cipherResult;
+    
+}
+
 }
 
 
-*/
+
+
+
+
+
+
+
