@@ -19,12 +19,7 @@ Every function needs to be documented in a block comment above the function den
 { What does the function do?
 { Are there limitations to the function? Must strings be less than a certain length? Are there data
 type restrictions? etc.
-
-
-
 */
-
-
 
 // ENCRYPTION ROTATION CIPHER FUNCTION PROTOTYPE
 char encryptionRotation(char plainText[], int shift);
@@ -41,6 +36,8 @@ char decryptionSubstitution(char plainText[]);
 
 int main()  {
     
+    // Prints a user-friendly menu system to the interface. Users must select an integer from 1-5.
+    
     printf("Please select an option from the following menu: \n");
     printf("1 - Encryption with a rotation cipher given input text and key \n");
     printf("2 - Decryption with a rotation cipher given input text and key \n");
@@ -48,37 +45,39 @@ int main()  {
     printf("4 - Decryption with a substitution cipher given input text and key \n");
     printf("5 - Decryption with a rotation cipher given the input text \n");
     
-    int menuSelection = 4;
-   // scanf("%d", &menuSelection); 
-    char plainText[500];
-    int shift = 0;
+    int menuSelection = 4;      // The user's menu selection is to be stored in this integer 
+    scanf("%d", &menuSelection); // Uses a custom run function to recieve an input from the text file labelled menuSelection
+    char plainText[500];        // Initialises the string of type char to a length of 500 characters
+                                // note: This length will dictate the maximum length of the input string as it determines the memorally allocation available to the string
+    int shift = 0;              // Initialises the integer shift which will be used in the rotation ciphers
    
    switch (menuSelection)   {
-       case 1: printf("\n The option selected was 1 : Encryption with a rotation cipher given input text and key \n\n");
+       case 1:        // If the user selects 1, the following code will run
+               printf("\n The option selected was 1 : Encryption with a rotation cipher given input text and key \n\n");
           
                FILE *input1;
-               input1 = fopen( "input.txt", "r" );
+               input1 = fopen( "input.txt", "r" );      // Opens the file input.txt and establishes that data will be read from the file ("r")
                
-                        if (input1 == NULL) {
+                        if (input1 == NULL) {           // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
                             perror("fopen()");
                             return -1;
                         }
                                      
                 FILE *input2;
-                input2 = fopen( "inputKey.txt", "r" );
+                input2 = fopen( "inputKey.txt", "r" );       // Opens the file inputKey.txt and establishes that data will be read from the file ("r")
                
-                        if (input2 == NULL) {
+                        if (input2 == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
                             perror("fopen()");
                             return -1;
                             }       
                         
-                fscanf(input2, "%d", &shift);
-                printf("The rotation key is: %d \n \n", shift);
+                fscanf(input2, "%d", &shift);                        // The fscanf() reads data from the file input2 and stores the integer value in the variable shift
+                printf("The rotation key is: %d \n \n", shift);      
                 
-                fscanf(input1, " %[^\n]s", plainText);
+                fscanf(input1, " %[^\n]s", plainText);              // The fscaf() reads data from the file input1 until a new line character is reached and stores the string in the variable plainText
                 printf(" Initital Text: %s \n", plainText);   
                      
-                encryptionRotation(plainText, shift);
+                encryptionRotation(plainText, shift);               // The encryptionRotation function is called and the previously obtained values for plainText and shift are used as inputs
                 printf("\n Encrypted text: %s", plainText);
                             
                break;
@@ -396,4 +395,3 @@ char decryptionSubstitution( char plainText[] )       {
     return *plainText;
     
 }
-
