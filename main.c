@@ -11,13 +11,15 @@ Description:
 /*  TO DO
 successfully read text string from input output file
 Do not encrypt white space, punctuation, or numerals (if input character is not a letter it should
-be copied to the output unmodifed) -- maybe use the ispunct() function?
+be copied to the output unmodied) -- maybe use the ispunct() function?
+write code description
+commenting / indenting style
 */
 
 
 
 // ENCRYPTION ROTATION CIPHER FUNCTION PROTOTYPE
-char encryptionRotation(char plainText[], int shift);
+char encryptionRotation(char letter, int shift);
 
 // DECRYPTION ROTATION CIPHER FUNCTION PROTOTYPE
 char decryptionRotation(char plainText[], int shift);
@@ -27,7 +29,6 @@ char encryptionSubstitution(char plainText[]);
 
 // DECRYPTION SUSTITUTION CIPHER FUNCTION PROTOTYPE
 char decryptionSubstitution(char plainText[]);
-
 
 
 int main()  {
@@ -40,38 +41,51 @@ int main()  {
     printf("5 - Decryption with a rotation cipher given the input text \n");
     
     int menuSelection = 1;
-    scanf("%d", &menuSelection); 
-    char plainText[] = "ZIT JXOEA WKGVF YGB PXDHL GCTK ZIT SQMN RGU";
-    int shift = 6;
+    //fscanf("%d", &menuSelection); 
+    char plainText[500] = "HELLO";
    
    switch (menuSelection)   {
-       case '1': printf("\n The option selected was 1 : Encryption with a rotation cipher given input text and key \n");
-               encryptionRotation(plainText, shift); 
+       case 1: printf("\n The option selected was 1 : Encryption with a rotation cipher given input text and key \n");
+          char letter;
+               int shift = 1;
+               FILE *input;
+               input = fopen( "input.txt", "r" );
+               
+                        if (input == NULL) {
+                            perror("fopen()");
+                            return -1;
+                        }
+                        
+                       while (feof(input) != 1) {
+                            fscanf(input, "%c", &letter);
+                            letter = encryptionRotation(letter, shift); 
+                            printf("%c", letter);
+                        }
+              
+                
                break;
-       case '2': printf("\n The option selected was 2 : Decryption with a rotation cipher given input text and key \n ");
+       case 2: printf("\n The option selected was 2 : Decryption with a rotation cipher given input text and key \n ");
                decryptionRotation(plainText, shift);
+               
+               
                break;
-       case '3': printf("\n The option selected was 3 : Encryption with a substitution cipher given input text and key \n");
+       case 3: printf("\n The option selected was 3 : Encryption with a substitution cipher given input text and key \n");
                encryptionSubstitution(plainText);
+               
+               
                break;
-       case '4': printf("\n The option selected was 4 : Decryption with a substitution cipher given input text and key \n");
+       case 4: printf("\n The option selected was 4 : Decryption with a substitution cipher given input text and key \n");
                decryptionSubstitution(plainText);
+               
+               
                break;
-       case '5': printf("\n The option selected was 5 : Decryption with a rotation cipher given the input text \n");
+       case 5: printf("\n The option selected was 5 : Decryption with a rotation cipher given the input text \n");
                // insert function here
                break;
        default: printf("\n An unknown option was selected. Please select 1, 2, 3, 4, or 5 \n");
    }
    
    
-   
-    //char plainText[300];
-    
-    //scanf("%s", plainText);  // newCustom run will read text from the plainText file which essentially performs a scanf
-    //scanf("%d", &shift);
-   //char plainText[] = "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
-    //char plainText[] = "ZNK WAOIQ HXUCT LUD PASVKJ UBKX ZNK RGFE JUM";
-    //printf("%d", key);
     printf("\n Initial message: \n");
     printf("\n %s\n", plainText);      // to test if the value of caeserCipher changes - debugging purposes
   
@@ -84,39 +98,38 @@ int main()  {
 }
 
 // ENCRYPTION ROTATION CIPHER FUNCTION DEFINITION:
-char encryptionRotation(char *plainText, int shift)    {
+char encryptionRotation( char letter, int shift )    {
 
-        for (int index = 0; index <= strlen(plainText) && plainText[index] != '\0' ; index ++)   {  // note: '00' is the ASCII character for NULL
-          
-                  
-               if ( plainText[index] < 65 && plainText[index] > 32)    {
-               plainText[index] = plainText[index] + shift;   // this try to ensure that punctuation and numbers do not change
-                 }
-            
-                plainText[index] = (plainText[index] + shift); 
+       //   letter = letter + shift;
                    
-                 if ( plainText[index] >= 97 )  {
-                     plainText[index] = plainText[index] - 32;      // this will convert lower case to capitals
+                  
+                if ( letter < 65 && letter > 32)    {
+                     letter = letter + shift;   // this try to ensure that punctuation and numbers do not change
+                 }
+    
+                 if ( letter >= 97 )  {
+                     letter = letter - 32;      // this will convert lower case to capitals
                  }
             
-                 if ( plainText[index] > 90)    {
-                     plainText[index] = plainText[index] - 26;   // this wall prevent letters falling off the end
+                 if ( letter > 90)    {
+                     letter = letter - 26;   // this wall prevent letters falling off the end
                  }
                  
-                 if ( plainText[index] == (32 + shift) ) {
-                            plainText[index] = plainText[index] - shift;        // this will ensure spaces remain the same
+                 if ( letter == (32 + shift) ) {
+                    letter = letter - shift;        // this will ensure spaces remain the same
                 }
-         }   
-         return *plainText;
+    
+         return letter;
+
 }
 
 
 
 // DECRYPTION ROTATION CIPHER FUNCTION DEFINITION
-char decryptionRotation(char plainText[], int shift)   {
+char decryptionRotation( char plainText[], int shift )   {
     
-        for (int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++)   {
-           
+        for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {
+           int shift = 1;
                    if ( plainText[index] < 65 && plainText[index] > 32)    {
                      plainText[index] = plainText[index] + shift;   // this try to ensure that punctuation and numbers do not change
                     }
@@ -146,13 +159,13 @@ char decryptionRotation(char plainText[], int shift)   {
 
 
 // ENCRYPTION SUSTITUTION CIPHER FUNCTION DEFINITION
-char encryptionSubstitution(char plainText[])   {
+char encryptionSubstitution( char plainText[] )   {
 
-         for (int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++)   {
+         for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {
              
     //n ote: the substitution key is based off QWERTY, the keyboard design for the Latin alphabet
     // enter the encryption key into the statements on the right hand side
-           switch(plainText[index])      {
+           switch( plainText[index] )      {
                   case 'A': plainText[index] = 'Q';
                     break;
                   case 'B': plainText[index] = 'W';
@@ -217,13 +230,13 @@ char encryptionSubstitution(char plainText[])   {
 
 
 // DECRYPTION SUSTITUTION CIPHER FUNCTION PROTOTYPE
-char decryptionSubstitution(char plainText[])       {
+char decryptionSubstitution( char plainText[] )       {
     
-         for (int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++)   {
+         for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {
              
     // note: the substitution key is based off QWERTY, the keyboard design for the Latin alphabet
     // enter the decryption key into the condition statments on the left hand side
-           switch(plainText[index])      {
+           switch( plainText[index] )      {
                   case 'Q': plainText[index] = 'A';
                     break;
                   case 'W': plainText[index] = 'B';
@@ -284,6 +297,3 @@ char decryptionSubstitution(char plainText[])       {
     return *plainText;
     
 }
-
-
-
