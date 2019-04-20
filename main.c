@@ -42,7 +42,7 @@ int main()  {
     printf("5 - Decryption with a rotation cipher given the input text \n");
     
     
-    int menuSelection = 4;      // The user's menu selection is to be stored in this integer 
+    int menuSelection = 1;      // The user's menu selection is to be stored in this integer 
     scanf("%d", &menuSelection); // Uses a custom run function to recieve an input from the text file labelled menuSelection
     char plainText[500];        // Initialises the string of type char to a length of 500 characters
                                 // note: This length will dictate the maximum length of the input string as it determines the memorally allocation available to the string
@@ -277,7 +277,7 @@ char encryptionSubstitution( char plainText[] )   {
               if ( plainText[index] >= 97 )  {
                              plainText[index] = plainText[index] - 32;      // this will covert lower case to capitals 
                          }
-             }   
+                
              
     // note: the substitution key is based off QWERTY, the keyboard design for the Latin alphabet
     // enter the encryption key into the statements on the right hand side
@@ -367,9 +367,10 @@ char decryptionSubstitution( char plainText[] )       {
               if ( plainText[index] >= 97 )  {
                                  plainText[index] = plainText[index] - 32;      // this will covert lower case to capitals 
                              }
-               }   
+                  
     // note: the substitution key is based off QWERTY, the keyboard design for the Latin alphabet
     // manually hard code the decryption key into the condition statments on the left hand side
+           
            switch( plainText[index] )      {
                   case 'Q': plainText[index] = 'A';
                     break;
