@@ -1,4 +1,4 @@
-* Programming Assignment 1: English Text Ciphers
+/* Programming Assignment 1: English Text Ciphers
 Created: 3 / 04 / 2019
 Author: Sarah Creasey
 Description: This code encrypts and decrypts input text based off a Rotation Cipher or a Substitution Cipher.
@@ -25,9 +25,6 @@ char decryptionSubstitution(char plainText[]);
 
 // DECRYPTION ROTATION CIPHER WITHOUT KEY PROTOTYPE
 char decryptionNoKey(char plainText[]);
-
-// STATITSICAL ANALYSIS DECRYPTION
-char statisticalDecryption(char common, char plainText[]);
 
 
 int main()  {
@@ -209,12 +206,6 @@ int main()  {
                   
               decryptionNoKey(plainText);                       // The decryptionNoKey function is called and the string inputText is the input value
                
-               output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
-                
-                        if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
-                            perror("fopen()");
-                            return -1;
-                            }  
             
                break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
                
@@ -281,24 +272,24 @@ char encryptionRotation(char plainText[], int shift)    {
 char decryptionRotation( char plainText[], int shift )   {
     
         for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
-
-   
+                    
+                    
                    if ( plainText[index] < 65 && plainText[index] >= 32)    {
                              plainText[index] = plainText[index] + shift;       // This ensures that punctuation, space and number characters do not change
                     }
                  
-            
+                 
                     plainText[index] = ( plainText[index] - shift );  
-        
-                     
-                       if ( plainText[index] < 65 && plainText[index] > 32)    {
+                 
+                 
+                    if ( plainText[index] < 65 && plainText[index] > 32)    {
                              plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
                     }
                  
                     
-                     if ( plainText[index] >= 97 )  {
+                   if ( plainText[index] >= 97 )  {
                              plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
-                     }
+                    }
              }   
              
              return *plainText;      // Returns a pointer to the string plainText
@@ -500,10 +491,19 @@ char decryptionSubstitution( char plainText[] )       {
  */
 char decryptionNoKey(char plainText[])          {
 
-    for ( int shiftKey = 0; shiftKey < 26; shiftKey ++ )        {
-    
+ FILE *output;
+        output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                      perror("fopen()");
+                      return -1;
+                }  
+                
+                
+     for ( int shiftKey = 0; shiftKey < 26; shiftKey ++ )        {
+   
             for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
-    
+   
        
                          if ( plainText[index] < 65 && plainText[index] >= 32)    {
                                  plainText[index] = plainText[index] + shiftKey;       // This ensures that punctuation, space and number characters do not change
@@ -513,98 +513,25 @@ char decryptionNoKey(char plainText[])          {
                         plainText[index] = ( plainText[index] - shiftKey );  
             
                          
-                         if ( plainText[index] < 65 && plainText[index] > 32)    {
-                                 plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
-                        }
-                    
-                    // need to account for falling off the other end?
-                        
+                        if ( plainText[index] < 65 && plainText[index] > 32)    {
+                                plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
+                       }
+   
+                        		
                          if ( plainText[index] >= 97 )  {
                                  plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
                          }   
-             
-                  }
-                       
-        printf(" Decryption attempt %d : %s \n", shiftKey, plainText);    
-       // fprintf(output, "Decrypted text : %s", plainText);      // The plainText string is printed to the outputText file
-     
- }
-
-    return *plainText;            // Returns a pointer to the string plainText 
-
-}
-
-
-
-// STATITSICAL ANALYSIS DECRYPTION ---- currently not in use
-/* The statisticalDecryption function accepts a string of type char as an input and a char for the most common letter.
- * The function executes three main steps to find the decrypted cipher text. It first determines the most
- * frequently occurring character in the plainText string and then assumes this character must be 'E', 'A'  or 'T'. 
- * The shiftKey is then calculated by determining the difference between the ASCII value for E and the ASCII value
- * of the most common character. The decryption algorithm can then be used with the value of shiftKey.
- *
- * The decryption operates within a for() loop that increments based off an index counter for each value in the string.
- * The function keeps punction, spaces and numbers the same by adding the shift key to ASCII values.
- * between 32 and 65. To prevemt letters from exceeding the ASCII characters for the upper case alphabet, 26 is added. Lower case
- * characters have ASCII values above 97, therefore by subtracting 32 the upper case equivalent can be obtained.
- *
- * The input string must have a length less than 499 characters as per the initialisation of the variable. 
- * A pointer to the string plainText is returned by the function.
- * 
- */
-char statisticalDecryption(char common, char plainText[])            {
-
-    // The following code finds most repeated character in the string plainText
-
-    int array[500] = {0};       // Initialize all elements of the array to 0
-    int max = array[0];         // Initialises the integer max to the first element of the array
-    int i = 0;                  // Index for the most frequent character in the string
-
-        for( int index = 0; plainText[index] != '\0'; index ++ )    {
-           ++array[ plainText[index] ];                 // This will count the number of times a character appears in the string
-        }
-    
-        for(int index = 0; plainText[index] != '\0'; index ++)     {
-           
-                if( array[plainText[index]] > max && plainText[index] != ' ')     {
-                     max = array[plainText[index] ];        // If the character's frequency is greater than the previous maximum, it becomes the new maximum
-                     i = index;
-                 }
-        }
-
-   printf("\n The most frequently occuring character is : %c \n", plainText[i]);     // For debugging purposes
-   
-   // This code will assume the most frequently occuring character is E, A or T and calculate the shift key based on this assumption
-   // The shiftKey becomes the difference between the decrypted letter assumed to be E and the ASCII value for E, A or T
-  int shiftKey = 0;           
-    // To ensure the shiftKey is a positive number between 1 and 25, its value is calculated according to whether the letter is above/below the ASCII value
-   
-       if ( plainText[i] > common)  {               // note: ASCII for 'E' is 69, 'A' is 65 and 'T' is 84
-           shiftKey = plainText[i] - common;
-       }
-       else    shiftKey = common - plainText[i];
-   
-     
-   // The following code then decrypts the message with the value of shiftKey 
-   
-   for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
-
-   
-                   if ( plainText[index] < 65 && plainText[index] >= 32)    {
-                             plainText[index] = plainText[index] + shiftKey;       // This ensures that punctuation, space and number characters do not change
-                    }
-                 
-            
-                    plainText[index] = ( plainText[index] - shiftKey );  
         
-                     
-                    if ( plainText[index] < 65 && plainText[index] > 32)    {
-                             plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
-                    }
+               }
 
+
+        printf(" Decryption attempt %d : %s \n", shiftKey, plainText);    
+        
+        fprintf(output, "Decryption attempt : %s \n", plainText);      // The plainText string is printed to the outputText file
+      
+ 
    }
    
-   return *plainText;
-    
+   return *plainText;            // Returns a pointer to the string plainText 
+   
 }
-
