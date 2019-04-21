@@ -11,7 +11,6 @@ sent to a text file (output.txt). Users must first select which option they wish
 #include <ctype.h>
 
 /*  TO DO
-write output to a file
 make rotation decryption function without key -- statistical analysis where most common letter becomes e and the key is determined
 from that knowledge then applied to the whole message.
 */
@@ -28,6 +27,9 @@ char encryptionSubstitution(char plainText[]);
 // DECRYPTION SUSTITUTION CIPHER FUNCTION PROTOTYPE
 char decryptionSubstitution(char plainText[]);
 
+// DECRYPTION ROTATION CIPHER WITHOUT KEY PROTOTYPE
+char decryptionNoKey(char plainText[]);
+
 
 int main()  {
     
@@ -42,7 +44,7 @@ int main()  {
     printf("5 - Decryption with a rotation cipher given the input text \n");
     
     
-    int menuSelection = 1;      // The user's menu selection is to be stored in this integer 
+    int menuSelection = 5;      // The user's menu selection is to be stored in this integer 
     scanf("%d", &menuSelection); // Uses a custom run function to recieve an input from the text file labelled menuSelection
     char plainText[500];        // Initialises the string of type char to a length of 500 characters
                                 // note: This length will dictate the maximum length of the input string as it determines the memorally allocation available to the string
@@ -74,11 +76,22 @@ int main()  {
                     printf("The rotation key is: %d \n \n", shift);      
                     
                     fscanf(input1, " %[^\n]s", plainText);              // The fscaf() reads data from the file input1 until a new line character is reached and stores the string in the variable plainText
-                    printf(" Initital Text: %s \n", plainText);   
+                    printf(" Initital Text : %s \n", plainText);   
                          
                     encryptionRotation(plainText, shift);               // The encryptionRotation function is called and the previously obtained values for plainText and shift are used as inputs
-                    printf("\n Encrypted text: %s", plainText);
+                    printf("\n Encrypted text : %s", plainText);
+                      
+                      
+                FILE *output;
+                output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                        if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                            perror("fopen()");
+                            return -1;
+                            }  
                             
+                    fprintf(output, "Encrypted text : %s", plainText);      // The plainText string is printed to the outputText file
+                    
                break;                                  // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
                
        
@@ -108,7 +121,17 @@ int main()  {
                          
                     decryptionRotation(plainText, shift);               // The decryptionRotation function is called and the previously obtained values for plainText and shift are used as inputs
                     printf("\n Decrypted text: %s", plainText);
+                     
+                   
+                output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                        if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                            perror("fopen()");
+                            return -1;
+                            }  
                             
+                    fprintf(output, "Decrypted text : %s", plainText);      // The plainText string is printed to the outputText file
+                    
                break;                              // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
               
       
@@ -130,6 +153,15 @@ int main()  {
                     encryptionSubstitution(plainText);              // The encryptionSubstitution function is called and the previously obtained values for plainText string are used as an input
                     printf("\n Encrypted text: %s", plainText);
                    
+                  output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                        if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                            perror("fopen()");
+                            return -1;
+                            }  
+                            
+                    fprintf(output, "Encrypted text : %s", plainText);      // The plainText string is printed to the outputText file
+                
                break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
                
       
@@ -151,6 +183,15 @@ int main()  {
                     decryptionSubstitution(plainText);                  // The decryptionSubstitution function is called and the previously obtained values for plainText string are used as an input
                     printf("\n Decrypted text: %s", plainText);
                
+               output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                        if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                            perror("fopen()");
+                            return -1;
+                            }  
+                            
+                    fprintf(output, "Decrypted text : %s", plainText);      // The plainText string is printed to the outputText file
+                
                 break;                              // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
                
       
@@ -158,10 +199,27 @@ int main()  {
       case 5:          // If the user selects 5, the following code will run
                 printf("\n The option selected was 5 : Decryption with a rotation cipher given the input text \n");
               
-              
-              
-              // insert function here
+              input1 = fopen( "input.txt", "r" );      // Opens the file input.txt and establishes that data will be read from the file ("r")
                
+                        if (input1 == NULL) {           // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                            perror("fopen()");
+                            return -1;
+                        }
+                        
+               fscanf(input1, " %[^\n]s", plainText);              // The fscaf() reads data from the file input1 until a new line character is reached and stores the string in the variable plainText
+                  
+              decryptionNoKey(plainText);                       // The decryptionNoKey function is called and the string inputText is the input value
+              printf("\n Decrypted text: %s", plainText);
+               
+               output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                        if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                            perror("fopen()");
+                            return -1;
+                            }  
+                            
+                    fprintf(output, "Decrypted text : %s", plainText);      // The plainText string is printed to the outputText file
+                 
                
                
                break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
@@ -272,7 +330,7 @@ char decryptionRotation( char plainText[], int shift )   {
  */
 char encryptionSubstitution( char plainText[] )   {
 
-         for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {
+       for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {
              
               if ( plainText[index] >= 97 )  {
                              plainText[index] = plainText[index] - 32;      // this will covert lower case to capitals 
@@ -334,12 +392,11 @@ char encryptionSubstitution( char plainText[] )   {
                     break;
                   case 'Z': plainText[index] = 'M';
                     break;
-        
                 }  
                   
             }
       
-    return *plainText;
+    return *plainText;              // Returns a pointer to the string plainText
     
 }
 
@@ -362,7 +419,7 @@ char encryptionSubstitution( char plainText[] )   {
  */
 char decryptionSubstitution( char plainText[] )       {
     
-         for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {
+       for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {
             
               if ( plainText[index] >= 97 )  {
                                  plainText[index] = plainText[index] - 32;      // this will covert lower case to capitals 
@@ -424,11 +481,82 @@ char decryptionSubstitution( char plainText[] )       {
                     break;
                   case 'M': plainText[index] = 'Z';
                     break;
-                  
                 }  
                   
             }
       
-    return *plainText;
+    return *plainText;              // Returns a pointer to the string plainText
+    
+}
+
+
+//make rotation decryption function without key -- statistical analysis where most common letter becomes e and the key is determined
+//from that knowledge then applied to the whole message.
+
+// DECRYPTION ROTATION CIPHER WITHOUT KEY DEFINITION
+/*
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+char decryptionNoKey(char plainText[])          {
+    
+    // The following code finds most repeated character in the string plainText
+
+int array[500] = {0};       // Initialize all elements of the array to 0
+int max = array[0];         // Initialises the integer max to the first element of the array
+int i = 0;                  // Index for the most frequent character in the string
+
+        for( int index = 0; plainText[index] != '\0'; index ++ )    {
+           ++array[ plainText[index] ];                 // This will count the number of times a character appears in the string
+        }
+    
+        for(int index = 0; plainText[index] != '\0'; index ++)     {
+           
+                if( array[plainText[index]] > max && plainText[index] != ' ')     {
+                     max = array[plainText[index] ];        // If the character's frequency is greater than the previous maximum, it becomes the new maximum
+                     i = index;
+                 }
+        }
+
+   printf("\n The most frequently occuring character is : %c \n", plainText[i]);     // For debugging purposes
+   
+   // This code will assume the most frequently occuring character is E and calculate the shift key based on this assumption
+   // The shiftKey becomes the difference between the decrypted letter assumed to be E and the ASCII value for E
+  int shiftKey = 0;           
+    // To ensure the shiftKey is a positive number between 1 and 25, its value is calculated according to whether the letter is above/below 69 on the ASCII table
+   if ( plainText[i] > 69)  {               // note: ASCII for 'E' is 69
+       shiftKey = plainText[i] - 69;
+   }
+   else    shiftKey = 69 - plainText[i];
+   
+   
+   
+   // The following code then decrypts the message with the value of shiftKey 
+   for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
+
+   
+                   if ( plainText[index] <= 65 && plainText[index] >= 32)    {
+                             plainText[index] = plainText[index] + shiftKey;       // This ensures that punctuation, space and number characters do not change
+                    }
+                 
+            
+                    plainText[index] = ( plainText[index] - shiftKey );  
+        
+                     
+                       if ( plainText[index] < 65 && plainText[index] > 32)    {
+                             plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
+                    }
+                 
+                    
+                     if ( plainText[index] >= 97 )  {
+                             plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
+                     }
+   
+   }
+   
+    return *plainText;              // Returns a pointer to the string plainText
     
 }
