@@ -10,10 +10,6 @@ sent to a text file (output.txt). Users must first select which option they wish
 #include <string.h>  
 #include <ctype.h>
 
-/*  TO DO
-make rotation decryption function without key -- statistical analysis where most common letter becomes e and the key is determined
-from that knowledge then applied to the whole message.
-*/
 
 // ENCRYPTION ROTATION CIPHER FUNCTION PROTOTYPE
 char encryptionRotation(char plainText[], int shift);
@@ -240,7 +236,7 @@ int main()  {
  * The rotation cipher operates within a for() loop that increments based off an index counter for each value in the string.
  * The function keeps punction, spaces and numbers the same by adding the shift key to ASCII values.
  * between 32 and 65. To prevemt letters from exceeding the ASCII characters for the upper case alphabet, 26 is subtracted. Lower case
- * characters have ASCII values above 97, therefore by subtracting 32 the ipper case equivalent can be obtained.
+ * characters have ASCII values above 97, therefore by subtracting 32 the upper case equivalent can be obtained.
  *
  * The shift integer must be between 0 and 25. The input string must have a length less than 499 characters as per 
  * the initialisation of the variable. A pointer to the string plainText is returned by the function.
@@ -272,7 +268,7 @@ char encryptionRotation(char plainText[], int shift)    {
 
 
 // DECRYPTION ROTATION CIPHER FUNCTION DEFINITION
-/* The decryptionRotation function accepts a string of characters in plainText and for each value within the string, 
+/* The decryptionRotation function accepts a string of characters in plainText.
  * The function also accepts an integer shift which is the key that determines what value to subtract from each character
  *
  * The rotation cipher operates within a for() loop that increments based off an index counter for each value in the string.
@@ -490,16 +486,26 @@ char decryptionSubstitution( char plainText[] )       {
 }
 
 
-//make rotation decryption function without key -- statistical analysis where most common letter becomes e and the key is determined
-//from that knowledge then applied to the whole message.
 
 // DECRYPTION ROTATION CIPHER WITHOUT KEY DEFINITION
-/*
- * 
- * 
- * 
- * 
- * 
+/* The decryptionNoKey function accepts a string of type char as an input.
+ * The function executes three main steps to find the decrypted cipher text. It first determines the most
+ * frequently occurring character in the plainText string and then assumes this character must be 'E'. 
+ * The shiftKey is then calculated by determining the difference between the ASCII value for E and the ASCII value
+ * of the most common character. The decryption algorithm can then be used with the value of shiftKey.
+ *
+ * The decryption operates within a for() loop that increments based off an index counter for each value in the string.
+ * The function keeps punction, spaces and numbers the same by adding the shift key to ASCII values.
+ * between 32 and 65. To prevemt letters from exceeding the ASCII characters for the upper case alphabet, 26 is added. Lower case
+ * characters have ASCII values above 97, therefore by subtracting 32 the upper case equivalent can be obtained.
+ *
+ * If the output is incorrect and the shiftKey does not decrypt the text, the user can input 'NO' to the terminal
+ * and the second most common letter will be assumed to be key. This process can be continued until the correct
+ * decryption is found.
+ *
+ * The input string must have a length less than 499 characters as per the initialisation of the variable. 
+ * A pointer to the string plainText is returned by the function.
+ *
  */
 char decryptionNoKey(char plainText[])          {
     
@@ -535,6 +541,7 @@ int i = 0;                  // Index for the most frequent character in the stri
    
    
    // The following code then decrypts the message with the value of shiftKey 
+   
    for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
 
    
@@ -549,13 +556,71 @@ int i = 0;                  // Index for the most frequent character in the stri
                        if ( plainText[index] < 65 && plainText[index] > 32)    {
                              plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
                     }
-                 
-                    
-                     if ( plainText[index] >= 97 )  {
-                             plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
-                     }
    
    }
+   
+   // This section of the function will take a user input to identify whether the decryption was correct
+   char result [10];
+   
+   printf(" Has the text been decrypted correctly? \n");
+   printf(" Please input 'YES' or 'NO' \n");
+   scanf("%s", result);
+   
+       if ( result == 'YES')    {
+            return *plainText;          // Returns a pointer to the string plainText
+       }
+           else if (result == 'NO') {
+    // The previous code is repeated but this time the most common character is assumed to be A
+        int array[500] = {0};       // Initialize all elements of the array to 0
+        int max = array[0];         // Initialises the integer max to the first element of the array
+        int i = 0;                  // Index for the most frequent character in the string
+        
+                for( int index = 0; plainText[index] != '\0'; index ++ )    {
+                   ++array[ plainText[index] ];                 // This will count the number of times a character appears in the string
+                }
+            
+                for(int index = 0; plainText[index] != '\0'; index ++)     {
+                   
+                        if( array[plainText[index]] > max && plainText[index] != ' ')     {
+                             max = array[plainText[index] ];        // If the character's frequency is greater than the previous maximum, it becomes the new maximum
+                             i = index;
+                         }
+                }
+        
+           printf("\n The most frequently occuring character is : %c \n", plainText[i]);     // For debugging purposes
+           
+           // This code will assume the most frequently occuring character is A and calculate the shift key based on this assumption
+           // The shiftKey becomes the difference between the decrypted letter assumed to be A and the ASCII value for A
+          int shiftKey = 0;           
+            // To ensure the shiftKey is a positive number between 1 and 25, its value is calculated according to whether the letter is above/below 69 on the ASCII table
+           if ( plainText[i] > 65)  {               // note: ASCII for 'A' is 65
+               shiftKey = plainText[i] - 65;
+           }
+           else    shiftKey = 65 - plainText[i];
+           
+           
+           
+           // The following code then decrypts the message with the value of shiftKey 
+           
+           for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
+        
+           
+                           if ( plainText[index] <= 65 && plainText[index] >= 32)    {
+                                     plainText[index] = plainText[index] + shiftKey;       // This ensures that punctuation, space and number characters do not change
+                            }
+                         
+                    
+                            plainText[index] = ( plainText[index] - shiftKey );  
+                
+                             
+                               if ( plainText[index] < 65 && plainText[index] > 32)    {
+                                     plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
+                            }
+           
+           }
+                       
+                
+           }
    
     return *plainText;              // Returns a pointer to the string plainText
     
