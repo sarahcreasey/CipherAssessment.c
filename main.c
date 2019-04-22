@@ -26,12 +26,14 @@ char decryptionSubstitution(char plainText[]);
 // DECRYPTION ROTATION CIPHER WITHOUT KEY PROTOTYPE
 int decryptionNoKey(char plainText[]);
 
+// STRING TEST FOR MOST COMMON ENGLISH WORDS
+int stringTest(char plainText[], char testString[]);
+
 
 int main()  {
     
     // Prints a user-friendly menu system to the interface. Users must select an integer from 1-5 to successfully run the cipher code.
-    
-    
+
     printf("Please select an option from the following menu: \n");
     printf("1 - Encryption with a rotation cipher given input text and key \n");
     printf("2 - Decryption with a rotation cipher given input text and key \n");
@@ -503,43 +505,61 @@ int decryptionNoKey(char plainText[])          {
    for (int counter = 1; counter <= 26; counter ++ )   {
     int shift = 1;
     
-        decryptionRotation(plainText, shift);
+        decryptionRotation(plainText, shift);			// The decryptionRotation function is called with the shift integer being 1 each time
+	   							// note: The function returns a string one shift away from the initial input, 
+	   							// therefore the next shift key only needs to be one to obtain the next rotation
         
         printf(" Decryption attempt %d : %s \n", counter, plainText); 
-            
         fprintf(output, "Decryption attempt %d: %s \n", counter, plainText);      // The plainText string is printed to the outputText file 
          
-     // TESTS THE STRING FOR "THE"
-    int matchCount = 0;
-	char testString[500] = "THE";
-    	
-        		if ( (strstr(plainText, testString) ) != NULL) {
-        			printf(" A match found : %s \n", testString);
-        			matchCount ++;
-        			printf("\n Decrypted text: %s \n", plainText);
-        			break;
-        		 }
+        // Testing the decryption attempt with the 12 most common words in the English language
+        stringTest(plainText, " THE ");
+         stringTest(plainText, " AND ");
+         stringTest(plainText, " OF");
+         stringTest(plainText, " TO");
+         stringTest(plainText, " IS");
+         stringTest(plainText, " THAT");
+         stringTest(plainText, " THIS");
+         stringTest(plainText, " WITH");
+         stringTest(plainText, " YOU");
+         stringTest(plainText, " ARE");
+         stringTest(plainText, " FROM");
+         stringTest(plainText, " NOT");
 
-        	else if (matchCount == 0) {
-        		printf(" Sorry, couldn't find a match to '%s' \n ", testString);
-        	}
-        	
-    // TESTS THE STRING FOR "AND"
-    int matchCount1 = 0;
-	char testString1[1500] = "YOU";
-    	
-        		if ( (strstr(plainText, testString1) ) != NULL) {
-        			printf(" A match found : %s \n", testString1);
-        			matchCount1 ++;
-        			printf("\n Decrypted text: %s \n", plainText);
-        			break;
-        		 }
-
-        	else if (matchCount1 == 0) {
-        		printf("Sorry, couldn't find a match to '%s' \n \n", testString1);
-        	}
-
-}
-   
+      }
    return 0;  
+}
+
+
+
+// STRING TEST FOR MOST COMMON ENGLISH WORDS
+/* The stringTest function accepts the plainText string of encrypted text and the testString of a 
+ * word in the English language that the string is to be searched for. The strstr() function is called 
+ * and compares the two strings. If a match is found between the strings, the strstr() function returns 1.
+ *
+ * If the return value of strstr() is not NULL, a match has been found and the string with the correct 
+ * decrypted text is re-printed to the interface. The stringTest function returns 1 if a match is found.
+ * 
+ * The plainText input string must have a length less than 499 characters as per the initialisation 
+ * of the variable. 
+ */
+int stringTest(char plainText[], char testString[])     {
+    	 
+    	FILE *output;
+        output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                      perror("fopen()");
+                      return -1;
+                }  
+                
+                
+        	if ( (strstr(plainText, testString) ) != NULL) {           // the strstr() function tests for matching characters
+        		                                                      // If NULL is not returned, a match has been found between the strings
+        		printf(" A match found : %s \n", testString);
+        		printf("\n Decrypted text: %s \n \n", plainText);
+                fprintf(output, "Decrypted text: %s \n", plainText);      // The correctly decrypted plainText string is printed to the outputText file 
+                return 1;
+             }	 
+   return 0;
 }
