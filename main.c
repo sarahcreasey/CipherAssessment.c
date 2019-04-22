@@ -24,7 +24,7 @@ char encryptionSubstitution(char plainText[]);
 char decryptionSubstitution(char plainText[]);
 
 // DECRYPTION ROTATION CIPHER WITHOUT KEY PROTOTYPE
-char decryptionNoKey(char plainText[]);
+int decryptionNoKey(char plainText[]);
 
 
 int main()  {
@@ -203,8 +203,10 @@ int main()  {
                         }
                         
                fscanf(input1, " %[^\n]s", plainText);              // The fscaf() reads data from the file input1 until a new line character is reached and stores the string in the variable plainText
-                  
-              decryptionNoKey(plainText);                       // The decryptionNoKey function is called and the string inputText is the input value
+                
+               printf("Encrypted text : %s \n\n", plainText);
+              
+               decryptionNoKey(plainText);                       // The decryptionNoKey function is called and the string inputText is the input value
                
             
                break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
@@ -272,20 +274,18 @@ char encryptionRotation(char plainText[], int shift)    {
 char decryptionRotation( char plainText[], int shift )   {
     
         for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
+                        
+                plainText[index] = ( plainText[index] - shift );  
                     
-                    
-                   if ( plainText[index] < 65 && plainText[index] >= 32)    {
+                   if ( ( plainText[index] + shift ) < 65 && ( plainText[index]+ shift) >= 32)    {
                              plainText[index] = plainText[index] + shift;       // This ensures that punctuation, space and number characters do not change
                     }
+                
                  
-                 
-                    plainText[index] = ( plainText[index] - shift );  
-                 
-                 
-                    if ( plainText[index] < 65 && plainText[index] > 32)    {
+                  if ( plainText[index] < 65 && plainText[index] > 39 && plainText[index] != '.')    {          // By checking that the character is not '.' punction is left unchanged
                              plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
                     }
-                 
+                
                     
                    if ( plainText[index] >= 97 )  {
                              plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
@@ -489,49 +489,57 @@ char decryptionSubstitution( char plainText[] )       {
  * A pointer to the string plainText is returned by the function.
  *
  */
-char decryptionNoKey(char plainText[])          {
+int decryptionNoKey(char plainText[])          {
 
- FILE *output;
+        FILE *output;
         output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
                 
                 if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
                       perror("fopen()");
                       return -1;
                 }  
-                
-                
-     for ( int shiftKey = 0; shiftKey < 26; shiftKey ++ )        {
-   
-            for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
-   
-       
-                         if ( plainText[index] < 65 && plainText[index] >= 32)    {
-                                 plainText[index] = plainText[index] + shiftKey;       // This ensures that punctuation, space and number characters do not change
-                        }
-                     
-                
-                        plainText[index] = ( plainText[index] - shiftKey );  
+
+
+   for (int counter = 1; counter <= 26; counter ++ )   {
+    int shift = 1;
+    
+        decryptionRotation(plainText, shift);
+        
+        printf(" Decryption attempt %d : %s \n", counter, plainText); 
             
-                         
-                        if ( plainText[index] < 65 && plainText[index] > 32)    {
-                                plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
-                       }
-   
-                        		
-                         if ( plainText[index] >= 97 )  {
-                                 plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
-                         }   
-        
-               }
+        fprintf(output, "Decryption attempt %d: %s \n", counter, plainText);      // The plainText string is printed to the outputText file 
+         
+     // TESTS THE STRING FOR "THE"
+    int matchCount = 0;
+	char testString[500] = "THE";
+    	
+        		if ( (strstr(plainText, testString) ) != NULL) {
+        			printf(" A match found : %s \n", testString);
+        			matchCount ++;
+        			printf("\n Decrypted text: %s \n", plainText);
+        			break;
+        		 }
 
+        	else if (matchCount == 0) {
+        		printf(" Sorry, couldn't find a match to '%s' \n ", testString);
+        	}
+        	
+    // TESTS THE STRING FOR "AND"
+    int matchCount1 = 0;
+	char testString1[1500] = "YOU";
+    	
+        		if ( (strstr(plainText, testString1) ) != NULL) {
+        			printf(" A match found : %s \n", testString1);
+        			matchCount1 ++;
+        			printf("\n Decrypted text: %s \n", plainText);
+        			break;
+        		 }
 
-        printf(" Decryption attempt %d : %s \n", shiftKey, plainText);    
-        
-        fprintf(output, "Decryption attempt : %s \n", plainText);      // The plainText string is printed to the outputText file
-      
- 
-   }
+        	else if (matchCount1 == 0) {
+        		printf("Sorry, couldn't find a match to '%s' \n \n", testString1);
+        	}
+
+}
    
-   return *plainText;            // Returns a pointer to the string plainText 
-   
+   return 0;  
 }
