@@ -8,7 +8,6 @@ sent to a text file (output.txt). Users must first select which option they wish
 
 #include <stdio.h>
 #include <string.h>  
-#include <ctype.h>
 
 
 // ENCRYPTION ROTATION CIPHER FUNCTION PROTOTYPE
@@ -41,10 +40,11 @@ int main()  {
     printf("4 - Decryption with a substitution cipher given input text and key \n");
     printf("5 - Decryption with a rotation cipher given the input text \n");
     
+    // The integer must be entered into the file menuSelection.txt and then the code must be run using the 
     
-    int menuSelection = 5;      // The user's menu selection is to be stored in this integer 
+    int menuSelection = 0;      // The user's menu selection is to be stored in this integer 
     scanf("%d", &menuSelection); // Uses a custom run function to recieve an input from the text file labelled menuSelection
-    char plainText[500];        // Initialises the string of type char to a length of 500 characters
+    char plainText[1000];        // Initialises the string of type char to a length of 500 characters
                                 // note: This length will dictate the maximum length of the input string as it determines the memorally allocation available to the string
     int shift = 0;              // Initialises the integer shift which will be used in the rotation ciphers
    
@@ -213,7 +213,9 @@ int main()  {
             
                break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
                
-       default: printf("\n An unknown option was selected. Please select 1, 2, 3, 4, or 5 \n");         // If the user does not select an option from 1-5, the defualt case will print this warning to the screen
+       default: printf("\n Select 1, 2, 3, 4, or 5 and enter into the text file 'menuSelection' \n");         // This will be printed to the screen by default on the first run 
+		   											      // Users are prompted to enter their selection into a text file then run using runCipher
+		   											      // note: runCipher scans the input for menuSelection from the text file
    }
   
     return 0;
@@ -231,7 +233,7 @@ int main()  {
  * between 32 and 65. To prevemt letters from exceeding the ASCII characters for the upper case alphabet, 26 is subtracted. Lower case
  * characters have ASCII values above 97, therefore by subtracting 32 the upper case equivalent can be obtained.
  *
- * The shift integer must be between 0 and 25. The input string must have a length less than 499 characters as per 
+ * The shift integer must be between 0 and 25. The input string must have a length less than 999 characters as per 
  * the initialisation of the variable. A pointer to the string plainText is returned by the function.
  *
  */
@@ -269,7 +271,7 @@ char encryptionRotation(char plainText[], int shift)    {
  * between 32 and 65. To prevemt letters from exceeding the ASCII characters for the upper case alphabet, 26 is added. Lower case
  * characters have ASCII values above 97, therefore by subtracting 32 the ipper case equivalent can be obtained.
  *
- * The shift integer must be between 0 and 25. The input string must have a length less than 499 characters as per 
+ * The shift integer must be between 0 and 25. The input string must have a length less than 999 characters as per 
  * the initialisation of the variable. A pointer to the string plainText is returned by the function.
  *
  */
@@ -303,7 +305,7 @@ char decryptionRotation( char plainText[], int shift )   {
 // ENCRYPTION SUSTITUTION CIPHER FUNCTION DEFINITION
 /* The encryptionSubstin accecpts a string input (array of type char) and will replace 
  * each letter of the string with a new letter as determined by the switch case statement below. The 
- * input string must have a length less than 499 characters as per the initialisation of the variable
+ * input string must have a length less than 999 characters as per the initialisation of the variable
  * in the main loop.
  *
  * The function operates with a for() loop that runs until the index reaches the length of the plainText
@@ -392,7 +394,7 @@ char encryptionSubstitution( char plainText[] )   {
 // DECRYPTION SUSTITUTION CIPHER FUNCTION PROTOTYPE
 /* The decryptionSubstituion function accecpts a string input (array of type char) and will replace 
  * each letter of the string with a new letter as determined by the switch case statement below. The
- * input string must have a length less than 499 characters as per the initialisation of the variable
+ * input string must have a length less than 999 characters as per the initialisation of the variable
  * in the main loop.
  *
  * The function operates with a for() loop that runs until the index reaches the length of the plainText
@@ -563,3 +565,5 @@ int stringTest(char plainText[], char testString[])     {
              }	 
    return 0;
 }
+
+
