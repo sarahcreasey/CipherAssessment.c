@@ -213,9 +213,7 @@ int main()  {
             
                break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
                
-       default: printf("\n Select 1, 2, 3, 4, or 5 and enter into the text file 'menuSelection' \n");         // This will be printed to the screen by default on the first run 
-		   											      // Users are prompted to enter their selection into a text file then run using runCipher
-		   											      // note: runCipher scans the input for menuSelection from the text file
+       default: printf("\n Select 1, 2, 3, 4, or 5 and enter into the text file 'menuSelection' \n");         // If the user does not select an option from 1-5, the defualt case will print this warning to the screen
    }
   
     return 0;
@@ -241,17 +239,16 @@ char encryptionRotation(char plainText[], int shift)    {
 
         for (int index = 0; index <= strlen(plainText) && plainText[index] != '\0' ; index ++)   {      // note: '\0' is the ASCII 'zero' character which terminates the string
           
-                if ( plainText[index] >= 97 )  {
+                 if ( plainText[index] >= 97 )  {
                      plainText[index] = plainText[index] - 32;        // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
                 }   
-            
-                plainText[index] = ( plainText[index] + shift ); 
-             
-                if ( plainText[index] <= 65 && plainText[index] >= 32)    {
-                      plainText[index] = plainText[index] - shift;      // This ensures that punctuation, spaces and number charcaters do not change
-                 }
+        
+                  if (plainText[index] >= 65 && plainText[index] <= 90) {
+                     plainText[index] = ( plainText[index] + shift );           // This shifts the ASCII characters for upper case letters by the required value
+                }
+
                    
-                 if ( plainText[index] > 90)    {   
+                  if ( plainText[index] > 90)    {   
                      plainText[index] = plainText[index] - 26;        // Will prevent letters falling off the end if plainText[index] - shift < 0
                  }
                  
@@ -279,19 +276,19 @@ char decryptionRotation( char plainText[], int shift )   {
     
         for ( int index = 0; index <= strlen(plainText) && plainText[index] != '\0'; index ++ )   {      // note: '\0' is the ASCII 'zero' character which terminates the string
                         
-                plainText[index] = ( plainText[index] - shift );  
-                    
-                   if ( ( plainText[index] + shift ) < 65 && ( plainText[index]+ shift) >= 32)    {
-                             plainText[index] = plainText[index] + shift;       // This ensures that punctuation, space and number characters do not change
-                    }
-                
-                 
-                  if ( plainText[index] < 65 && plainText[index] > 39 && plainText[index] != '.')    {          // By checking that the character is not '.' punction is left unchanged
+                        
+                  if (plainText[index] >= 65 && plainText[index] <= 90)  {          // If the text is within the ASCII capital range it will have the shift subtracted from each character
+                            plainText[index] = ( plainText[index] - shift );
+                      
+                      
+                                if ( plainText[index] < 65 && plainText[index] > 39  )    {          // By checking that the character is not '.' punction is left unchanged
                              plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
-                    }
-                
-                    
-                   if ( plainText[index] >= 97 )  {
+                                 }
+            
+                }
+
+
+                  if ( plainText[index] >= 97 )  {
                              plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
                     }
              }   
@@ -507,17 +504,14 @@ int decryptionNoKey(char plainText[])          {
    for (int counter = 1; counter <= 26; counter ++ )   {
     int shift = 1;
     
-        decryptionRotation(plainText, shift);			// The decryptionRotation function is called with the shift integer being 1 each time
-	   							// note: The function returns a string one shift away from the initial input, 
-	   							// therefore the next shift key only needs to be one to obtain the next rotation
+        decryptionRotation(plainText, shift);
         
         printf(" Decryption attempt %d : %s \n", counter, plainText); 
-        fprintf(output, "Decryption attempt %d: %s \n", counter, plainText);      // The plainText string is printed to the outputText file 
-         
+
         // Testing the decryption attempt with the 12 most common words in the English language
         stringTest(plainText, " THE ");
          stringTest(plainText, " AND ");
-         stringTest(plainText, " OF");
+         stringTest(plainText, " THERE");
          stringTest(plainText, " TO");
          stringTest(plainText, " IS");
          stringTest(plainText, " THAT");
@@ -542,7 +536,7 @@ int decryptionNoKey(char plainText[])          {
  * If the return value of strstr() is not NULL, a match has been found and the string with the correct 
  * decrypted text is re-printed to the interface. The stringTest function returns 1 if a match is found.
  * 
- * The plainText input string must have a length less than 499 characters as per the initialisation 
+ * The plainText input string must have a length less than 9./a.out99 characters as per the initialisation 
  * of the variable. 
  */
 int stringTest(char plainText[], char testString[])     {
@@ -560,10 +554,13 @@ int stringTest(char plainText[], char testString[])     {
         		                                                      // If NULL is not returned, a match has been found between the strings
         		printf(" A match found : %s \n", testString);
         		printf("\n Decrypted text: %s \n \n", plainText);
-                fprintf(output, "Decrypted text: %s \n", plainText);      // The correctly decrypted plainText string is printed to the outputText file 
+        		fprintf(output, "\n A match found : %s \n", testString);
+                fprintf(output, "\n Decrypted text: %s \n", plainText);      // The correctly decrypted plainText string is printed to the outputText file 
                 return 1;
              }	 
-   return 0;
+             else 
+                 return -1;
 }
+
 
 
