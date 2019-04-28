@@ -3,7 +3,8 @@ Created: 3 / 04 / 2019
 Author: Sarah Creasey
 Description: This code encrypts and decrypts input text based off a Rotation Cipher or a Substitution Cipher.
 The input is read from the relevant files (input.txt and inputKey.txt) and printed to the console. The output is also 
-sent to a text file (output.txt). Users must first select which option they wish to execute in the terminal using ./a.out
+sent to a text file (output.txt). Users must run the program and then select which option they wish to execute. This
+option must be entered into the menuSelection.txt file and the program must then be run using the custom run function runCiper.
 */
 
 #include <stdio.h>
@@ -40,7 +41,7 @@ int main()  {
     printf("4 - Decryption with a substitution cipher given input text and key \n");
     printf("5 - Decryption with a rotation cipher given the input text \n");
     
-    // The integer must be entered into the file menuSelection.txt and then the code must be run using the 
+    // The integer must be entered into the file menuSelection.txt and then the code must be run using the custom runCipher function
     
     int menuSelection = 0;      // The user's menu selection is to be stored in this integer 
     scanf("%d", &menuSelection); // Uses a custom run function to recieve an input from the text file labelled menuSelection
@@ -239,7 +240,7 @@ char encryptionRotation(char plainText[], int shift)    {
 
         for (int index = 0; index <= strlen(plainText) && plainText[index] != '\0' ; index ++)   {      // note: '\0' is the ASCII 'zero' character which terminates the string
           
-                 if ( plainText[index] >= 97 )  {
+                  if ( plainText[index] >= 97 )  {
                      plainText[index] = plainText[index] - 32;        // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
                 }   
         
@@ -279,21 +280,20 @@ char decryptionRotation( char plainText[], int shift )   {
                         
                   if (plainText[index] >= 65 && plainText[index] <= 90)  {          // If the text is within the ASCII capital range it will have the shift subtracted from each character
                             plainText[index] = ( plainText[index] - shift );
-                      
-                      
-                                if ( plainText[index] < 65 && plainText[index] > 39  )    {          // By checking that the character is not '.' punction is left unchanged
-                             plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0
+                    
+                                if ( plainText[index] < 65 && plainText[index] > 39  )    {      
+                             plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0, where 0 is the starting letter (A)
                                  }
-            
-                }
-
+                      
+                   }
 
                   if ( plainText[index] >= 97 )  {
                              plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
                     }
+                  
              }   
              
-             return *plainText;      // Returns a pointer to the string plainText
+     return *plainText;      // Returns a pointer to the string plainText
             
 }
 
@@ -486,7 +486,7 @@ char decryptionSubstitution( char plainText[] )       {
  * between 32 and 65. To prevemt letters from exceeding the ASCII characters for the upper case alphabet, 26 is added. Lower case
  * characters have ASCII values above 97, therefore by subtracting 32 the upper case equivalent can be obtained.
  *
- * The input string must have a length less than 499 characters as per the initialisation of the variable. 
+ * The input string must have a length less than 999 characters as per the initialisation of the variable. 
  * A pointer to the string plainText is returned by the function.
  *
  */
@@ -500,16 +500,17 @@ int decryptionNoKey(char plainText[])          {
                       return -1;
                 }  
 
-
-   for (int counter = 1; counter <= 26; counter ++ )   {
-    int shift = 1;
+     for (int counter = 1; counter <= 26; counter ++ )   {            // Will increment for each of the possible decryption keys between 1 to 26
+       
+       int shift = 1;          // The shift variable remains at 1 as each time the decryptionRotation function is called it returns a pointer
+                               // to the string plainText which has been shifted by 1 already. To find the next key rotation, the shift of 1 is used
     
         decryptionRotation(plainText, shift);
         
-        printf(" Decryption attempt %d : %s \n", counter, plainText); 
+       // printf(" Decryption attempt %d : %s \n", counter, plainText);     // Used to observe each of the decryption attempts during debugging
 
         // Testing the decryption attempt with the 12 most common words in the English language
-        stringTest(plainText, " THE ");
+         stringTest(plainText, " THE ");
          stringTest(plainText, " AND ");
          stringTest(plainText, " THERE");
          stringTest(plainText, " TO");
@@ -523,7 +524,9 @@ int decryptionNoKey(char plainText[])          {
          stringTest(plainText, " NOT");
 
       }
+      
    return 0;  
+   
 }
 
 
@@ -536,7 +539,7 @@ int decryptionNoKey(char plainText[])          {
  * If the return value of strstr() is not NULL, a match has been found and the string with the correct 
  * decrypted text is re-printed to the interface. The stringTest function returns 1 if a match is found.
  * 
- * The plainText input string must have a length less than 9./a.out99 characters as per the initialisation 
+ * The plainText input string must have a length less than 999 characters as per the initialisation 
  * of the variable. 
  */
 int stringTest(char plainText[], char testString[])     {
@@ -552,15 +555,14 @@ int stringTest(char plainText[], char testString[])     {
                 
         	if ( (strstr(plainText, testString) ) != NULL) {           // the strstr() function tests for matching characters
         		                                                      // If NULL is not returned, a match has been found between the strings
-        		printf(" A match found : %s \n", testString);
+        		printf(" A word match found : %s \n", testString);
         		printf("\n Decrypted text: %s \n \n", plainText);
-        		fprintf(output, "\n A match found : %s \n", testString);
+        		fprintf(output, "\n A word match found : %s \n", testString);
                 fprintf(output, "\n Decrypted text: %s \n", plainText);      // The correctly decrypted plainText string is printed to the outputText file 
                 return 1;
+                
              }	 
+             
              else 
                  return -1;
 }
-
-
-
