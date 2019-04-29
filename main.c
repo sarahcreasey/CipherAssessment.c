@@ -3,8 +3,10 @@ Created: 3 / 04 / 2019
 Author: Sarah Creasey
 Description: This code encrypts and decrypts input text based off a Rotation Cipher or a Substitution Cipher.
 The input is read from the relevant files (input.txt and inputKey.txt) and printed to the console. The output is also 
-sent to a text file (output.txt). Users must first select which option they wish to execute in the terminal using ./a.out
+sent to a text file (output.txt). Users must run the program and then select which option they wish to execute. This
+option must be entered into the menuSelection.txt file and the program must then be run using the custom run function runCiper.
 */
+
 
 #include <stdio.h>
 #include <string.h>  
@@ -42,7 +44,7 @@ int main()  {
     printf("3 - Encryption with a substitution cipher given input text and key \n");
     printf("4 - Decryption of a substitution cipher given input text and key \n");
     printf("5 - Decryption of a rotation cipher given the input text \n");
-    printf("6 - Decryption of a substitution cipher given input text \n");
+    printf("6 - Decryption of a substitution cipher given input text \n");      // note: This decryption option has not been successfully achieved for all letters
     
     // The integer must be entered into the file menuSelection.txt and then the code must be run using the custom runCipher function
     
@@ -598,7 +600,7 @@ int stringTest(char plainText[], char testString[])     {
 
 
 
-// DECRYPTION SUBSTITUTION CIPHER WITHOUT KEY DEFINITION
+// DECRYPTION SUBSTITUTION CIPHER WITHOUT KEY DEFINITION -- not successful in decrypting
 /* The substituionNoKey accepts a string of type char as an input. It first determines the most
  * frequently occurring character in the plainText string and then assumes this character must be 'E'
  * based on the frequency of letters in the English language. This method is not robust and will only
@@ -608,7 +610,7 @@ int stringTest(char plainText[], char testString[])     {
  * A pointer to the string plainText is returned by the function.
  */
 char substitutionNoKey(char plainText[])        {
-    
+    /*
 int array[500] = {0};       // Initialize all elements of the array to 0
 int max = array[0];         // Initialises the integer max to the first element of the array	    
 int i = 0;                  // Index for the most frequent character in the string	   
@@ -645,7 +647,8 @@ int i = 0;                  // Index for the most frequent character in the stri
     printf("\n Decryption attempt : %s \n", plainText);
    fprintf(output, "\n Decryption attempt : %s \n", plainText);
     
-
+*/
 return *plainText;          // Returns a pointer to the string plainText
 
 }
+
