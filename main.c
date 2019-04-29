@@ -3,8 +3,7 @@ Created: 3 / 04 / 2019
 Author: Sarah Creasey
 Description: This code encrypts and decrypts input text based off a Rotation Cipher or a Substitution Cipher.
 The input is read from the relevant files (input.txt and inputKey.txt) and printed to the console. The output is also 
-sent to a text file (output.txt). Users must run the program and then select which option they wish to execute. This
-option must be entered into the menuSelection.txt file and the program must then be run using the custom run function runCiper.
+sent to a text file (output.txt). Users must first select which option they wish to execute in the terminal using ./a.out
 */
 
 #include <stdio.h>
@@ -24,10 +23,13 @@ char encryptionSubstitution(char plainText[]);
 char decryptionSubstitution(char plainText[]);
 
 // DECRYPTION ROTATION CIPHER WITHOUT KEY PROTOTYPE
-int decryptionNoKey(char plainText[]);
+int rotationNoKey(char plainText[]);
 
 // STRING TEST FOR MOST COMMON ENGLISH WORDS
 int stringTest(char plainText[], char testString[]);
+
+// DECRYPTION SUBSTITUTION CIPHER WITHOUT KEY PROTOTYPE
+char substitutionNoKey(char plainText[]);
 
 
 int main()  {
@@ -36,10 +38,11 @@ int main()  {
 
     printf("Please select an option from the following menu: \n");
     printf("1 - Encryption with a rotation cipher given input text and key \n");
-    printf("2 - Decryption with a rotation cipher given input text and key \n");
+    printf("2 - Decryption of a rotation cipher given input text and key \n");
     printf("3 - Encryption with a substitution cipher given input text and key \n");
-    printf("4 - Decryption with a substitution cipher given input text and key \n");
-    printf("5 - Decryption with a rotation cipher given the input text \n");
+    printf("4 - Decryption of a substitution cipher given input text and key \n");
+    printf("5 - Decryption of a rotation cipher given the input text \n");
+    printf("6 - Decryption of a substitution cipher given input text \n");
     
     // The integer must be entered into the file menuSelection.txt and then the code must be run using the custom runCipher function
     
@@ -209,11 +212,34 @@ int main()  {
                 
                printf("Encrypted text : %s \n\n", plainText);
               
-               decryptionNoKey(plainText);                       // The decryptionNoKey function is called and the string inputText is the input value
+               rotationNoKey(plainText);                       // The rotationNoKey function is called and the string inputText is the input value
                
             
                break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
+      
+      
+      
+      case 6:       // If the user selects 6, the following code will run
+                printf("\n The option selected was 6 : Decryption of a substitution cipher given input text \n");
+                
+              input1 = fopen( "input.txt", "r" );      // Opens the file input.txt and establishes that data will be read from the file ("r")
                
+                        if (input1 == NULL) {           // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                            perror("fopen()");
+                            return -1;
+                        }
+                        
+               fscanf(input1, " %[^\n]s", plainText);              // The fscaf() reads data from the file input1 until a new line character is reached and stores the string in the variable plainText
+                
+               printf("\n Encrypted text : %s \n\n", plainText);
+               
+               substitutionNoKey(plainText);        // The substitutionNoKey function is called and the string inputText is the input value
+               
+            
+               break;                               // Once the case has been executed this block of code will "break" i.e. jump to the next line of code outside the switch case statments
+     
+     
+      
        default: printf("\n Select 1, 2, 3, 4, or 5 and enter into the text file 'menuSelection' \n");         // If the user does not select an option from 1-5, the defualt case will print this warning to the screen
    }
   
@@ -280,17 +306,20 @@ char decryptionRotation( char plainText[], int shift )   {
                         
                   if (plainText[index] >= 65 && plainText[index] <= 90)  {          // If the text is within the ASCII capital range it will have the shift subtracted from each character
                             plainText[index] = ( plainText[index] - shift );
-                    
+                      
+                      
                                 if ( plainText[index] < 65 && plainText[index] > 39  )    {      
                              plainText[index] = plainText[index] + 26;       // Will prevent letters falling off the end if plainText[index] - shift < 0, where 0 is the starting letter (A)
                                  }
-                      
+                                 
                    }
+
 
                   if ( plainText[index] >= 97 )  {
                              plainText[index] = plainText[index] - 32;       // This coverts lower case to capitals by subtracting 32 from characters with ASCII values above 97
                     }
-                  
+                    
+                    
              }   
              
      return *plainText;      // Returns a pointer to the string plainText
@@ -478,7 +507,7 @@ char decryptionSubstitution( char plainText[] )       {
 
 
 // DECRYPTION ROTATION CIPHER WITHOUT KEY DEFINITION
-/* The decryptionNoKey function accepts a string of type char as an input.
+/* The rotationNoKey function accepts a string of type char as an input.
  * The function executes a brute force attack by printing the decryption attempt for key values between 0 and 25.
  *
  * The decryption operates within a for() loop that increments based off an index counter for each value in the string.
@@ -490,7 +519,7 @@ char decryptionSubstitution( char plainText[] )       {
  * A pointer to the string plainText is returned by the function.
  *
  */
-int decryptionNoKey(char plainText[])          {
+int rotationNoKey(char plainText[])          {
 
         FILE *output;
         output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
@@ -500,17 +529,16 @@ int decryptionNoKey(char plainText[])          {
                       return -1;
                 }  
 
-     for (int counter = 1; counter <= 26; counter ++ )   {            // Will increment for each of the possible decryption keys between 1 to 26
-       
-       int shift = 1;          // The shift variable remains at 1 as each time the decryptionRotation function is called it returns a pointer
-                               // to the string plainText which has been shifted by 1 already. To find the next key rotation, the shift of 1 is used
+
+   for (int counter = 1; counter <= 26; counter ++ )   {
+        int shift = 1;
     
         decryptionRotation(plainText, shift);
         
        // printf(" Decryption attempt %d : %s \n", counter, plainText);     // Used to observe each of the decryption attempts during debugging
 
         // Testing the decryption attempt with the 12 most common words in the English language
-         stringTest(plainText, " THE ");
+        stringTest(plainText, " THE ");
          stringTest(plainText, " AND ");
          stringTest(plainText, " THERE");
          stringTest(plainText, " TO");
@@ -531,7 +559,8 @@ int decryptionNoKey(char plainText[])          {
 
 
 
-// STRING TEST FOR MOST COMMON ENGLISH WORDS
+
+// STRING TEST FOR MOST COMMON ENGLISH WORDS DEFINITION
 /* The stringTest function accepts the plainText string of encrypted text and the testString of a 
  * word in the English language that the string is to be searched for. The strstr() function is called 
  * and compares the two strings. If a match is found between the strings, the strstr() function returns 1.
@@ -565,4 +594,58 @@ int stringTest(char plainText[], char testString[])     {
              
              else 
                  return -1;
+}
+
+
+
+// DECRYPTION SUBSTITUTION CIPHER WITHOUT KEY DEFINITION
+/* The substituionNoKey accepts a string of type char as an input. It first determines the most
+ * frequently occurring character in the plainText string and then assumes this character must be 'E'
+ * based on the frequency of letters in the English language. This method is not robust and will only
+ * partially provide the correct substitution, when the most frequent character is E.
+ * 
+ * The input string must have a length less than 499 characters as per the initialisation of the variable. 
+ * A pointer to the string plainText is returned by the function.
+ */
+char substitutionNoKey(char plainText[])        {
+    
+int array[500] = {0};       // Initialize all elements of the array to 0
+int max = array[0];         // Initialises the integer max to the first element of the array	    
+int i = 0;                  // Index for the most frequent character in the string	   
+
+
+    for( int index = 0; plainText[index] != '\0'; index ++ )    {	        
+           ++array[ plainText[index] ];                 // This will count the number of times a character appears in the string	        
+    }
+
+    
+    for(int index = 0; plainText[index] != '\0'; index ++)     {
+           	           
+                if( array[plainText[index]] > max && plainText[index] != ' ')     {	            
+                     max = array[ plainText[index] ];        // If the character's frequency is greater than the previous maximum, it becomes the new maximum	        
+                 }
+                 
+     }
+        
+        
+        FILE *output;
+        output = fopen( "outputText.txt", "w");         // Opens the file inputKey.txt and establishes that data will be written to the file ("w")
+                
+                if (output == NULL) {                // If the input is NULL (nothing) then an error message is printed and the value -1 is returned
+                      perror("fopen()");
+                      return -1;
+                }  
+                
+                
+    printf("\n The most frequently occuring character is : %c \n This will become the letter E \n", plainText[i]);     // For debugging purposes
+   fprintf(output, "\n The most frequently occuring character is : %c \n This will become the letter E \n", plainText[i]);     // For debugging purposes
+
+    plainText[i] = 'E' ;     // Let the most common letter in the string be replaced by the letter E
+
+    printf("\n Decryption attempt : %s \n", plainText);
+   fprintf(output, "\n Decryption attempt : %s \n", plainText);
+    
+
+return *plainText;          // Returns a pointer to the string plainText
+
 }
